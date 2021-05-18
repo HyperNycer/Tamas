@@ -3,6 +3,8 @@ var canvas = document.querySelector('canvas');
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
+alapx=window.innerWidth;
+alapy=window.innerHeight;
 
 var platform=canvas.getContext('2d');
 var me=canvas.getContext('2d');
@@ -12,25 +14,32 @@ var ctx = canvas.getContext("2d");
 var snd = new Audio("Kalimba.mp3"); // buffers automatically when created
 snd.play();
 
+//height percentage//
+var kepy=alapy/969;
+//width percentage//
+var kepx=alapx/1920;
+console.log(kepx,kepy);
+
 //alap
-var dbhely=965;
-var dbmagassag=885;
+var dbhely=alapx/2+50*kepx;
+var dbmagassag=alapy-kepy*84;
 var array=[];
 var ellenorzes=[];
 var pontszam=0;
 var i;
-var platformpositioning=900;
-var platformhight=900;
+var platformpositioning=alapx/2-20*kepx;
+var platformhight=alapy-69*kepy;
 var megvar=0;
 var plusz=0;
 var elso=1;
+var was=0;
 
 //first szelesseg
 //second magassag
 szamol();
 function szamol(){
     ctx.font = "30px Arial";
-    ctx.fillText(pontszam, 950, 50);
+    ctx.fillText(pontszam, alapx/2, 50);
 }
 
 /*function refresh(){
@@ -47,8 +56,9 @@ function szamol(){
 }*/
 
 function refresh(){
+    platform.clearRect(0,0,2400, 2000);
     ctx.font = "30px Arial";
-    ctx.fillText("Vege", 950, 50);
+    ctx.fillText("Vege", alapx/2, 50);
 }
 var t=0;
 if(t==0){
@@ -63,15 +73,15 @@ function randomizal(){
         if(i>0){
         array[i]=Math.floor(Math.random()*2);
         if(array[i]==0){
-            platformpositioning=platformpositioning+80;
+            platformpositioning=platformpositioning+kepx*80;
         }
         else{
-            platformpositioning=platformpositioning-80;
+            platformpositioning=platformpositioning-kepx*80;
         }
-        platformhight=platformhight-80;
+        platformhight=platformhight-kepy*80;
         platforms();
-        console.log(array[i]);
-        console.log(platformhight,platformpositioning);
+        //console.log(array[i]);
+        //console.log(platformhight,platformpositioning);
     }
 }
 }
@@ -79,58 +89,119 @@ function randomizal(){
 
 
 
+
+
+
+document.addEventListener("click", printMousePos, false);
+
+function printMousePos()
+{
+    var e = window.event;
+
+    var cursorX = e.clientX;
+    if (cursorX<alapx/2) {
+        if (array[pontszam+1] == 1) {
+            if(elso>1){
+            plusz=plusz+kepy*80;
+            }
+            elso++;
+            pontszam++;
+            if(pontszam>1){
+            platformpositioning=alapx/2-20*kepx;
+            platformhight=alapy-69*kepy+plusz;
+            animation();
+            platforms();
+            }
+            szamol();
+            me.clearRect(dbhely, dbmagassag, kepx*15, kepy*15);
+            dbhely = dbhely - kepx*80;
+        }
+        else {
+            refresh();
+        }
+        if(elso<3){
+            dbmagassag = dbmagassag - kepy*80;
+            }
+        moving();
+    }
+    if (cursorX>alapx/2) {
+        if (array[pontszam+1] == 0) {
+            if(elso>1){
+                plusz=plusz+kepy*80;
+                }
+                elso++;
+            pontszam++;
+            if(pontszam>1){
+            platformpositioning=alapx/2-20*kepx;
+            platformhight=alapy+plusz-69*kepy;
+            animation();
+            platforms();
+            }
+            ctx.clearRect(920, 20, 80, 50);
+            szamol();
+            me.clearRect(dbhely, dbmagassag, kepx*15, kepy*15);
+            dbhely = dbhely + kepx*80;
+        }
+        else {
+            refresh();
+        }
+        if(elso<3){
+        dbmagassag = dbmagassag - kepy*80;
+        }
+        moving();
+    }
+}
 
 window.addEventListener("keydown", checkKeyPress, false);
 function checkKeyPress(key){
     if (key.keyCode == "65") {
         if (array[pontszam+1] == 1) {
             if(elso>1){
-            plusz=plusz+80;
+            plusz=plusz+kepy*80;
             }
             elso++;
             pontszam++;
             if(pontszam>1){
-            platformpositioning=900;
-            platformhight=900+plusz;
+            platformpositioning=alapx/2-20*kepx;
+            platformhight=alapy-69*kepy+plusz;
             animation();
             platforms();
             }
-            ctx.clearRect(920, 20, 80, 50);
             szamol();
-            me.clearRect(dbhely, dbmagassag, 15, 15);
-            dbhely = dbhely - 80;
+            me.clearRect(dbhely, dbmagassag, kepx*15, kepy*15);
+            dbhely = dbhely - kepx*80;
         }
         else {
             refresh();
         }
         if(elso<3){
-            dbmagassag = dbmagassag - 80;
+            dbmagassag = dbmagassag - kepy*80;
             }
         moving();
     }
     if (key.keyCode == "68") {
         if (array[pontszam+1] == 0) {
             if(elso>1){
-                plusz=plusz+80;
+                plusz=plusz+kepy*80;
                 }
                 elso++;
             pontszam++;
             if(pontszam>1){
-            platformpositioning=900;
-            platformhight=900+plusz;
+            platformpositioning=alapx/2-20*kepx;
+            platformhight=alapy+plusz-69*kepy;
             animation();
             platforms();
             }
             ctx.clearRect(920, 20, 80, 50);
             szamol();
-            me.clearRect(dbhely, dbmagassag, 15, 15);
-            dbhely = dbhely + 80;
+            me.clearRect(dbhely, dbmagassag, kepx*15, kepy*15);
+            dbhely = dbhely + kepx*80;
         }
         else {
             refresh();
         }
         if(elso<3){
-        dbmagassag = dbmagassag - 80;
+        dbmagassag = dbmagassag - kepy*80;
         }
         moving();
     }
@@ -138,25 +209,25 @@ function checkKeyPress(key){
 
 
 function moving(){
-    me.fillRect(dbhely,dbmagassag,15, 15);
+    me.fillRect(dbhely,dbmagassag,kepy*15, kepy*15);
 }
 function platformsa(){
-    platform.fillRect(900,900,140, 10);
+    platform.fillRect(alapx/2,alapy-kepy*50,kepx*140, kepy*10);
 }
 function movinga(){
-    me.fillRect(965,885,15, 15);
+    me.fillRect(alapx/2+kepx*60,alapy-kepy*65,kepy*15, kepy*15);
 }
 function animation(){
     platform.clearRect(0,0,2400, 2000);
     for(let j=1;j<=1005;j++){
         if(array[j]==0){
-            platformpositioning=platformpositioning+80;
+            platformpositioning=platformpositioning+kepx*80;
         }
         else{
-            platformpositioning=platformpositioning-80;
+            platformpositioning=platformpositioning-kepx*80;
         }
         console.log('HEllo');
-        platformhight=platformhight-80;
+        platformhight=platformhight-kepy*80;
         platforms();
         console.log(array[j]);
         console.log(platformhight,platformpositioning);
@@ -164,6 +235,6 @@ function animation(){
 }
 
 function platforms(){
-    platform.fillRect(platformpositioning,platformhight,140, 10);
+    platform.fillRect(platformpositioning,platformhight,kepx*140, kepy*10);
 }
 console.log(canvas);
